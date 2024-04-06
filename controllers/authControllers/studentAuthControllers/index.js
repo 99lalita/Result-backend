@@ -90,7 +90,7 @@ const loginStudent = asyncHandler(async (req, res, next) => {
         bcrypt
           .compare(password, user[0].account_password)
           .then((isEqual) => {
-            //console.log(isEqual);
+            // console.log(isEqual);
             if (isEqual) {
               const payload = {};
               payload.email = user[0].email;
@@ -262,5 +262,5 @@ module.exports = {
   logoutStudent,
   refreshAuthenticationToken,
   sendVerificationCode,
-  getStudentVerified
+  getStudentVerified,
 };

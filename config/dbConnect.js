@@ -1,5 +1,5 @@
-const mysql = require("mysql2")
-const dotenv = require("dotenv")
+const mysql = require("mysql2");
+const dotenv = require("dotenv");
 
 dotenv.config();
 
@@ -37,5 +37,4 @@ dbPool
 //     console.log(result);
 //   })
 
-  
 module.exports = dbPool.promise();
