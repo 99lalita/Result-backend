@@ -56,10 +56,39 @@ const registerStudent = asyncHandler(async (req, res, next) => {
               newUser
                 .signupAndSaveStudent()
                 .then((result) => {
+                  console.log(result);
+                  const userData = {
+                    enrollment_id,
+                    first_name,
+                    last_name,
+                    email,
+                    admission_year,
+                    current_year,
+                    graduation_year,
+                    isDSY,
+                    profileImageURI,
+                  };
+                  const payload = {};
+                  payload.email = result.email;
+                  payload.account_password = result.account_password;
+                  const loginAuthToken = jwt.sign(
+                    payload,
+                    process.env.PRIVATE_AUTH_BACKEND_TOKEN,
+                    { expiresIn: "15h" }
+                  );
+                  const refreshAuthToken = jwt.sign(
+                    payload,
+                    process.env.PRIVATE_AUTH_BACKEND_REFRESH_TOKEN,
+                    { expiresIn: "5h" }
+                  );
+
+                  refreshTokensCache.set(refreshAuthToken, refreshAuthToken);
                   res.json({
-                    status: 200,
+                    status: 201,
                     message: "Account created successfully !",
-                    result: result[0],
+                    user: userData,
+                    loginAuthToken: loginAuthToken,
+                    refreshAuthToken: refreshAuthToken,
                   });
                 })
                 .catch((err0) => {
@@ -99,7 +128,7 @@ const loginStudent = asyncHandler(async (req, res, next) => {
               const loginAuthToken = jwt.sign(
                 payload,
                 process.env.PRIVATE_AUTH_BACKEND_TOKEN,
-                { expiresIn: "20s" }
+                { expiresIn: "15h" }
               );
               const refreshAuthToken = jwt.sign(
                 payload,
@@ -111,7 +140,7 @@ const loginStudent = asyncHandler(async (req, res, next) => {
               res.json({
                 status: 200,
                 message: "Login successful",
-                result: user[0],
+                user: user[0],
                 loginAuthToken: loginAuthToken,
                 refreshAuthToken: refreshAuthToken,
               });

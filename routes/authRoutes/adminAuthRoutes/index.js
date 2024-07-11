@@ -5,7 +5,7 @@ const {
   loginAdmin,
   logoutAdmin,
   refreshAuthenticationToken,
-  loginSuperAdmin
+  loginSuperAdmin,
 } = require("../../../controllers/authControllers/adminAuthControlles/index");
 const { body } = require("express-validator");
 
@@ -56,6 +56,6 @@ router.post("/logout", logoutAdmin);
 router.post("/refresh", refreshAuthenticationToken);
 
 // complete endpoint /api/v1/auth/admin/super-admin
-router.get("/super-admin",loginSuperAdmin);
+router.get("/super-admin", loginSuperAdmin);
 
 module.exports = router;

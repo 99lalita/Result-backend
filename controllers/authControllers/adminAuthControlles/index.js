@@ -3,7 +3,7 @@ const bcrypt = require("bcryptjs");
 const { validationResult } = require("express-validator");
 const NodeCache = require("node-cache");
 const AdminAuthModel = require("../../../models/adminAuthModel/index");
-
+const jwt = require("jsonwebtoken");
 const refreshTokensCache = new NodeCache();
 
 // endpoint => /api/v1/auth/admin/signup
@@ -47,10 +47,36 @@ const registerAdmin = asyncHandler(async (req, res, next) => {
               newUser
                 .signupAndSaveAdmin()
                 .then((result) => {
+                  console.log(result);
+                  const userData = {
+                    admin_id,
+                    first_name,
+                    last_name,
+                    email,
+                    isHOD,
+                    profileImageURI,
+                  };
+                  const payload = {};
+                  payload.email = result.email;
+                  payload.account_password = result.account_password;
+                  const loginAuthToken = jwt.sign(
+                    payload,
+                    process.env.PRIVATE_AUTH_BACKEND_TOKEN,
+                    { expiresIn: "15h" }
+                  );
+                  const refreshAuthToken = jwt.sign(
+                    payload,
+                    process.env.PRIVATE_AUTH_BACKEND_REFRESH_TOKEN,
+                    { expiresIn: "5h" }
+                  );
+
+                  refreshTokensCache.set(refreshAuthToken, refreshAuthToken);
                   res.json({
-                    status: 200,
+                    status: 201,
                     message: "Account created successfully !",
-                    result: result[0],
+                    user: userData,
+                    loginAuthToken: loginAuthToken,
+                    refreshAuthToken: refreshAuthToken,
                   });
                 })
                 .catch((err0) => {
@@ -90,7 +116,7 @@ const loginAdmin = asyncHandler(async (req, res, next) => {
               const loginAuthToken = jwt.sign(
                 payload,
                 process.env.PRIVATE_AUTH_BACKEND_TOKEN,
-                { expiresIn: "20s" }
+                { expiresIn: "20h" }
               );
               const refreshAuthToken = jwt.sign(
                 payload,

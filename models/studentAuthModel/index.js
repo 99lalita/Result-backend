@@ -60,6 +60,13 @@ class StudentAuthModel {
     }
   }
 
+  static updateStudentPassword(email, password) {
+    return dbPoolConnectionCompanion.execute(
+      `UPDATE student SET account_password = ? WHERE email = ?`,
+      [password, email]
+    );
+  }
+
   static findStudentByEmail(email) {
     return dbPoolConnection.execute(`SELECT * FROM student WHERE email = ?`, [
       email,
@@ -71,6 +78,20 @@ class StudentAuthModel {
       `UPDATE student SET verify_status = 'YES' WHERE email = ?`,
       [studentEmail]
     );
+  }
+
+  static async totalStudents(batchYear) {
+    try {
+      const [rows, fields] = await dbPoolConnection.execute(
+        `SELECT COUNT(*) AS total_students FROM student WHERE graduation_year = ?`,
+        [batchYear]
+      );
+
+      return rows[0].total_students; // Access 'total_students' instead of 'totalStudents'
+    } catch (error) {
+      console.error("Error fetching total students for batch:", error);
+      throw error;
+    }
   }
 }
 

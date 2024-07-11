@@ -30,7 +30,7 @@ def extract_data_from_pdf(pdf_path):
         result_match = re.search(r'Result\s*:\s*(PASS|FAIL)', text, re.IGNORECASE)
         result = result_match.group(1) if result_match else 'Result not found'
 
-        total_match = re.search(r'Grand Total \(OUT OF775 \):\s*(\d+)', text, re.IGNORECASE)
+        total_match = re.search(r'Grand Total \(OUT OF1550 \):\s*(\d+)', text, re.IGNORECASE)
         total = total_match.group(1) if total_match else "Total not found"
 
         # Create a dictionary with extracted data
