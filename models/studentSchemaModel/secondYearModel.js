@@ -124,7 +124,7 @@ WHERE
   static async findStudentsWithBacklog(batchYear) {
     try {
       const [rows, fields] = await dbPoolConnection.execute(
-        `SELECT COUNT(*) AS studentsWithBacklog FROM secondyearresult WHERE Graduation_Year = ? AND resultStatus = 'atkt'`,
+        `SELECT COUNT(*) AS studentsWithBacklog FROM secondyearresult WHERE Graduation_Year = ? AND resultStatus IN ('atkt (1)', 'atkt (2)', 'atkt (3)')`,
         [batchYear]
       );
 
@@ -138,7 +138,7 @@ WHERE
   static async findNumberOfFailStudents(batchYear) {
     try {
       const [rows, fields] = await dbPoolConnection.execute(
-        `SELECT COUNT(*) AS failstudents FROM secondyearresult WHERE Graduation_Year = ? AND resultStatus = 'fail'`,
+        `SELECT COUNT(*) AS failstudents FROM secondyearresult WHERE Graduation_Year = ? AND resultStatus = 'atkt (3)'`,
         [batchYear]
       );
 

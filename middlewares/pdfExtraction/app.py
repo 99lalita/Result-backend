@@ -27,7 +27,7 @@ def extract_data_from_pdf(pdf_path):
         percentage_match = re.search(r'Percentage\s*:\s*([\d.]+)', text, re.IGNORECASE)
         percentage = percentage_match.group(1) if percentage_match else "Percentage not found"
 
-        result_match = re.search(r'Result\s*:\s*(PASS|FAIL)', text, re.IGNORECASE)
+        result_match = re.search(r'Result\s*:\s*(PASS|FAIL|ATKT\s*\(\d+\))', text, re.IGNORECASE)
         result = result_match.group(1) if result_match else 'Result not found'
 
         total_match = re.search(r'Grand Total \(OUT OF1550 \):\s*(\d+)', text, re.IGNORECASE)
